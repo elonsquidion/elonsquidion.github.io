@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What?</title>
+    <title>Bold and Brash</title>
     <style>
         body {
             background-color: #000;
@@ -41,10 +41,17 @@
 </head>
 <script>
     function hacked() {
-        alert("You've been hacked!");
         var x = document.getElementById("hidden-text");
-        x.style.display = "block";
+        alert("You've been hacked!")
+        x.style.display = "block"
     }
+
+    function unhacked() {
+        var x = document.getElementById("hidden-text");
+        alert("You've been unhacked. Congrats. And here is a little price for it.")
+        x.style.display = "none"
+    }
+
 </script>
 <body>
     <div class="content">
@@ -52,7 +59,11 @@
         <p>Hello, so this is my website that I made cause I'm boring. Pretty useless, isn't it?</p>
         <p>Here I have a button and I'm sure you don't want to click on it</p>
         <button onclick="hacked()" class="button">Don't click me!</button>
-        <p id="hidden-text" style="display: none;">Oh, you clicked it? Well, I'm not responsible for what will happen next</p>
+        <div id="hidden-text" style="display: none;">
+            <p>Oh, you clicked it? Well, I'm not responsible for what will happen next</p>
+            <p>You should click this button again to unhacked</p>
+            <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><button class="button" onclick="unhacked()">Unhacked button</button></a>
+        </div>
     </div>
     <footer>
         <p>Eumm, hey! Thank you for clicking this link</p>
