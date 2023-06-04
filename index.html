@@ -17,11 +17,46 @@
         a:hover {
             color: #f00;
         }
+        .content {
+            min-height: 100vh;
+            padding-bottom: 60px; /* Tinggi footer */
+        }
+
+        footer {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .button {
+            border: none;
+            cursor: pointer;
+        }
+
     </style>
 </head>
+<script>
+    function hacked() {
+        alert("You've been hacked!");
+        var x = document.getElementById("hidden-text");
+        x.style.display = "block";
+    }
+</script>
 <body>
-    <h1>Accidentally spawned on earth, it's weird</h1>
-    <p>Eumm, hey! Thank you for clicking this link</p>
-    <p>If you don't mind, you could check <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">this link</a> too</p>
+    <div class="content">
+        <h1>Accidentally spawned on earth, it's weird</h1>
+        <p>Hello, so this is my website that I made cause I'm boring. Pretty useless, isn't it?</p>
+        <p>Here I have a button and I'm sure you don't want to click on it</p>
+        <button onclick="hacked()" class="button">Don't click me!</button>
+        <p id="hidden-text" style="display: none;">Oh, you clicked it? Well, I'm not responsible for what will happen next</p>
+    </div>
+    <footer>
+        <p>Eumm, hey! Thank you for clicking this link</p>
+        <p>If you don't mind, you could check <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">this link</a> too</p>
+    </footer>
 </body>
 </html>
