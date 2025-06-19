@@ -1,73 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bold and Brash</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-        }
-        a {
-            color: rgb(0, 255, 21);
-            text-decoration: underline;
-        }
-        a:hover {
-            color: #f00;
-        }
-        .content {
-            min-height: 100vh;
-            padding-bottom: 60px; /* Tinggi footer */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>oops i'm online</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: hidden;
+    }
 
-        footer {
-            background-color: #000;
-            padding: 20px;
-            text-align: center;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-        }
+    .container {
+      padding: 50px;
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+      padding-bottom: 120px;
+    }
 
-        .button {
-            border: none;
-            cursor: pointer;
-        }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0;
+      animation: neonText 1s infinite alternate;
+    }
 
-    </style>
+    @keyframes neonText {
+      from { color: #0ff; text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+      to { color: #f0f; text-shadow: 0 0 10px #f0f, 0 0 20px #f0f; }
+    }
+
+    p {
+      font-size: 1.2em;
+      line-height: 1.6em;
+      color: #fff;
+    }
+
+    .btn-chaos {
+      background: none;
+      border: 2px dashed #fff;
+      color: #0ff;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      margin: 10px;
+      animation: pulseGlow 2s infinite;
+    }
+
+    .btn-chaos:hover {
+      background-color: #fff;
+      color: #000;
+      transform: rotate(5deg) scale(1.1);
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+        color: #0ff;
+      }
+      50% {
+        box-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
+        color: #f0f;
+      }
+      100% {
+        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+        color: #0ff;
+      }
+    }
+
+    #hidden-text {
+      display: none;
+      margin-top: 40px;
+    }
+
+    #hidden-text p {
+      color: #ff0;
+      text-shadow: 0 0 5px #ff0, 0 0 15px #f0f;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      font-size: 0.8em;
+      padding: 10px;
+      color: #ccc;
+    }
+  </style>
 </head>
-<script>
+<body>
+  <div class="container">
+    <h1>i have entered the internet</h1>
+    <p>hello, so this is my website that i made cause i'm boring. pretty useless, isn't it?</p>
+    <p>i do not know why you are here. but now that you are here, you must not leave.</p>
+    <p>but hey, here i have something and i'm sure you do not want to click it.</p>
+    <button class="btn-chaos" onclick="hacked()">i told you not to</button>
+
+    <div id="hidden-text">
+      <p>ah. so you clicked it. the prophecy is complete.</p>
+      <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank" style="color:#0ff; text-decoration: underline;">
+          <button class="btn-chaos" onclick="unhacked()">release me</button>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <p>this website is powered by pure chaos and a lack of supervision.</p>
+    <p>if you don't mind, you could check <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">this link</a> too</p>
+  </footer>
+
+  <audio id="sfx" src="https://www.myinstants.com/media/sounds/vine-boom.mp3"></audio>
+
+  <script>
     function hacked() {
-        var x = document.getElementById("hidden-text");
-        alert("You've been hacked!")
-        x.style.display = "block"
+      var x = document.getElementById("hidden-text");
+      var audio = document.getElementById("sfx");
+      audio.play();
+      alert("you've been hacked. emotionally.");
+      x.style.display = "block";
     }
 
     function unhacked() {
-        var x = document.getElementById("hidden-text");
-        alert("You've been unhacked. Congrats. And here is a little price for it.")
-        x.style.display = "none"
+      var x = document.getElementById("hidden-text");
+      alert("you are free now. or are you?");
+      x.style.display = "none";
     }
-
-</script>
-<body>
-    <div class="content">
-        <h1>Accidentally spawned on earth, it's weird</h1>
-        <p>Hello, so this is my website that I made cause I'm boring. Pretty useless, isn't it?</p>
-        <p>Here I have a button and I'm sure you don't want to click on it</p>
-        <button onclick="hacked()" class="button">Don't click me!</button>
-        <div id="hidden-text" style="display: none;">
-            <p>Oh, you clicked it? Well, I'm not responsible for what will happen next</p>
-            <p>You should click this button again to unhacked</p>
-            <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><button class="button" onclick="unhacked()">Unhacked button</button></a>
-        </div>
-    </div>
-    <footer>
-        <p>Eumm, hey! Thank you for clicking this link</p>
-        <p>If you don't mind, you could check <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">this link</a> too</p>
-    </footer>
+  </script>
 </body>
 </html>
