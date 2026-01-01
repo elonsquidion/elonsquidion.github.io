@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>other</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #000;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    }
+
+    h1 {
+      color: #f0f;
+      margin-bottom: 10px;
+    }
+
+    p {
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* Utilitas warna untuk game */
+    .stat-bar { margin-bottom: 20px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 10px;}
+    .stat-label { color: #888; }
+    .val-ok { color: #0f0; }
+    .val-warn { color: #ff0; }
+    .val-crit { color: #f00; }
+    .day-counter { color: #f0f; }
+
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      background: none;
+      border: 1px solid #fff;
+      color: #0ff;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .box {
+      margin-top: 40px;
+      min-height: 100px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #progress {
+      width: 100%;
+      border: 1px solid #fff;
+      display: none;
+      margin-top: 20px;
+    }
+
+    #bar {
+      height: 20px;
+      width: 0%;
+      background: #0ff;
+    }
+    
+    .game-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>you chose game</h1>
+  <p>why should we do important things. when we can play game instead.</p>
+
+  <div>
+    <button onclick="startGame()">simulator mahasiswa</button>
+    <button>coming soon...</button>
+    <button onclick="window.location.href='index.html'">back</button>
+  </div>
+
+  <div class="box" id="output"></div>
+
+  <div id="progress">
+    <div id="bar"></div>
+  </div>
+
+  <script>
+    const output = document.getElementById("output");
+    const progressBox = document.getElementById("progress");
+    const bar = document.getElementById("bar");
+
+    function getRandomDecimal(min, max) {
+        // return Math.floor((((Math.random() * (max - min) + min)*100))/100);
+        return Math.random() * (max - min) + min;
+    }
+
+    function getRandomInteger(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // --- GAME LOGIC START ---
+    let stats = {
+      ipk: 3.50,
+      sanity: 100,
+      money: 1000000,
+      day: 1,
+      mieHistory: []
+    };
+
+    function startGame() {
+      progressBox.style.display = "none";
+      // Reset stats
+      stats = { ipk: 3.50, sanity: 100, money: 500000, day: 1, mieHistory: [] };
+      renderGame("hari ke-1. selamat datang di neraka harian.");
+    }
+
+    function renderGame(msg) {
+      // Hitung mie dalam 7 hari terakhir
+      const recentMie = stats.mieHistory.filter(d => d > stats.day - 7).length;
+
+      // Win
+      if (stats.day >= 110 && stats.ipk > 2.0) return winGame()
+
+      // Cek Game Over
+      if (stats.sanity <= 0) return gameOver("masuk rsj. burnout permanen.");
+      if (stats.ipk < 1.0) return gameOver("kena d.o. dipulangkan paksa.");
+      if (stats.money <= -50000) return gameOver("ditangkap warga karena ngutang warteg."); // Ada toleransi ngutang dikit
+
+      // Warna Stats
+      const ipkColor = stats.ipk > 3 ? "val-ok" : (stats.ipk > 2 ? "val-warn" : "val-crit");
+      const sanityColor = stats.sanity > 50 ? "val-ok" : (stats.sanity > 20 ? "val-warn" : "val-crit");
+      const moneyColor = stats.money > 100000 ? "val-ok" : (stats.money > 20000 ? "val-warn" : "val-crit");
+      
+      output.innerHTML = `
+        <div class="stat-bar">
+          <span class="stat-label">HARI:</span> <span class="day-counter">${stats.day}</span> | 
+          <span class="stat-label">IPK:</span> <span class="${ipkColor}">${stats.ipk.toFixed(2)}</span> | 
+          <span class="stat-label">WARAS:</span> <span class="${sanityColor}">${stats.sanity}%</span> | 
+          <span class="stat-label">RP:</span> <span class="${moneyColor}">${stats.money.toLocaleString()}</span>
+        </div>
+        <p style="min-height: 50px; color: #f0f;">> ${msg}</p>
+        <div class="game-controls">
+          <button onclick="action('belajar')">kuliah (stress)</button>
+          <button onclick="action('turu')">turu (skip hari)</button>
+          <button onclick="action('hemat')">makan mie (hemat)</button>
+          <button onclick="action('foya')">hedon (mahal)</button>
+          <button onclick="action('kerja')">part-time (capek)</button>
+        </div>
+      `;
+    }
+
+    function action(type) {
+      let msg = "";
+      const luck = Math.random();
+      
+      // Biaya hidup harian (otomatis berkurang dikit setiap hari)
+      const dailyCost = Math.floor(Math.random() * (30000 - 15000 + 1)) + 15000; 
+      
+      // Ini otomatis nge-reset count kalau udah lewat seminggu
+      stats.mieHistory = stats.mieHistory.filter(d => d > stats.day - 7);
+
+      // Logika Aksi
+      if (type === 'belajar') {
+        if (luck > 0.97) {
+          stats.ipk += getRandomDecimal(0.5, 1); 
+          stats.sanity -= getRandomInteger(5, 10);
+          msg = "lu seketika kerasukan enstein";
+        } else if (luck > 0.8) {
+          stats.ipk += getRandomDecimal(0.15, 0.25); 
+          stats.sanity -= getRandomInteger(10, 15);
+          msg = "dosen mood bagus. materi masuk otak.";
+        } else if (luck > 0.3) {
+          stats.ipk += getRandomDecimal(0.05, 0.15); 
+          stats.sanity -= getRandomInteger(15, 20);
+          msg = "dosen yapping gajelas. belajar sendiri.";
+        } else {
+          stats.sanity -= getRandomInteger(20, 25);
+          stats.ipk -= getRandomDecimal(-0.01, 0.05); // Bingung malah turun
+          msg = "kuis dadakan. lu cuma bisa pasrah.";
+        }
+        stats.money -= dailyCost; // Tetep butuh makan
+      } 
+      else if (type === 'turu') {
+        stats.sanity += getRandomInteger(15, 20);
+        stats.ipk -= getRandomDecimal(0.02, 0.2); // Bolos sehari
+        stats.money -= (dailyCost - 5000); // Hemat karena tidur doang
+        msg = "seharian di kasur. dunia luar menakutkan.";
+      } 
+      else if (type === 'hemat') {
+        // Cek Kuota Mie Mingguan (Max 4)
+        if (stats.mieHistory.length >= 4) {
+             return gameOver("TIPES & USUS BUNTU.");
+        }
+
+        // Makan indomie doang
+        stats.money -= 10000; 
+        stats.sanity -= getRandomInteger(-0.05, 5);
+        stats.ipk -= getRandomDecimal(-0.01, 0.02); 
+        stats.mieHistory.push(stats.day); // Catat hari ini makan mie
+        
+        // Pesan peringatan
+        let count = stats.mieHistory.length;
+        if (count === 4) {
+          msg = "lu ngerasa udah cukup makan mi minggu ini.";
+        } else if (count === 3) {
+          msg = "perut mulai nolak. ngerasa aneh.";
+        } else {
+            msg = "sarapan promag. malam sadikin.";
+        }
+      }
+      else if (type === 'foya') {
+        if (stats.money < 150000) {
+          msg = "kartu ditolak. lu miskin.";
+          stats.sanity -= getRandomInteger(8, 12); // Malu
+          stats.money -= dailyCost;
+        } else {
+          stats.money -= 150000;
+          stats.sanity += getRandomInteger(45, 60);
+          msg = "self healing. checkout shopee. dompet kosong.";
+        }
+        stats.ipk -= getRandomDecimal(-0.01, 0.01);
+      }
+      else if (type === 'kerja') {
+        if (luck > 0.4) {
+          stats.money += 75000; // Gaji harian
+          stats.sanity -= getRandomInteger(15, 20);
+          msg = "jaga shift cafe. kaki pegel. dapet tips dikit.";
+        } else {
+            stats.sanity -= getRandomInteger(20, 25);
+            stats.money += 10000; // Kena potong/sepi
+            msg = "dimarahin bos. pelanggan rese. gaji dipotong.";
+          }
+          stats.ipk -= getRandomDecimal(0.02, 0.03);
+        }
+        
+        // Time Progress
+        stats.day++;
+        
+        // MECHANIC BARU: BULANAN (Setiap 30 Hari)
+        if (stats.day % 30 === 0) {
+          // Random allowance logic
+          let allowanceLuck = Math.random();
+          let allowanceAmount = 0;
+          let transferMsg = "";
+          
+          if (allowanceLuck < 0.15) {
+            allowanceAmount = 50000;
+            stats.sanity += getRandomInteger(0, 5);
+            transferMsg = "ortu lupa transfer. cuma dikirim pulsa.";
+          } else if (allowanceLuck < 0.65) {
+            allowanceAmount = 500000 + Math.floor(Math.random() * 300000);
+            stats.sanity += getRandomInteger(5, 15);
+            transferMsg = "transferan standar masuk. cukup buat nafas.";
+          } else if (allowanceLuck < 0.95) {
+            allowanceAmount = 1000000 + Math.floor(Math.random() * 500000);
+            stats.sanity += getRandomInteger(15, 25);
+            transferMsg = "ortu lagi ada rejeki. transferan deres.";
+          } else {
+            allowanceAmount = 2500000;
+            stats.sanity += getRandomInteger(25, 50);
+            transferMsg = "JACKPOT! dikirim uang kaget.";
+        }
+        
+        stats.money += allowanceAmount;
+        msg += ` <br><span style="color:#0f0">[BULAN BARU: +Rp${allowanceAmount.toLocaleString()} (${transferMsg})]</span>`;
+      }
+
+      // Cap stats
+      if (stats.ipk > 4.0) stats.ipk = 4.0;
+      if (stats.sanity > 100) stats.sanity = 100;
+      if (stats.day >= 100) msg += "<br>Susun tugas akhir..."
+
+      renderGame(msg);
+    }
+
+    function winGame() {
+      progressBox.style.display = "none";
+      let title = "";
+      let desc = "";
+      
+      // LOGIKA ENDING BERDASARKAN STATS
+
+      // 1. ENDING SULTAN (Duit Banyak > 2 Juta)
+      if (stats.money > 2000000) {
+        title = "SARJANA JALUR PRIVILEGE";
+        desc = "lu lulus bukan karena pinter, tapi karena lu bisa beli fotocopyan temen sekelas.<br>skripsi lu bayar joki premium.<br>setelah ini lu langsung jadi komisaris di PT bapak lu.";
+      }
+      
+      // 2. ENDING AMBIS GILA (IPK Tinggi > 3.8, Waras Rendah < 30)
+      else if (stats.ipk >= 3.8 && stats.sanity < 30) {
+        title = "CUM LAUDE JALUR RSJ";
+        desc = "selamat, ipk lu hampir sempurna.<br>bayarannya: lu lupa caranya senyum, lambung lu kronis, dan lu ga punya temen.<br>wisuda pake toga, pulang pake obat penenang.";
+      }
+
+      // 3. ENDING GENIUS SANTAI (IPK Tinggi > 3.5, Waras Tinggi > 80)
+      else if (stats.ipk >= 3.5 && stats.sanity > 80) {
+        title = "THE CHOSEN ONE";
+        desc = "lu pasti pake cheat.<br>gimana caranya ipk tinggi tapi mental masih sehat?<br>lu adalah anomali statistik. hrd pun curiga liat cv lu.";
+      }
+
+      // 4. ENDING MAHASISWA ABADI (Hari > 250)
+      else if (stats.day > 250) {
+        title = "LULUSAN LEGENDARIS";
+        desc = "satpam kampus udah nganggep lu keluarga.<br>dosen pembimbing lu udah ganti 3 kali.<br>akhirnya lulus juga. ijazah lu berdebu tapi penuh sejarah.";
+      }
+
+      // 5. ENDING KUPU-KUPU (IPK Standard, Waras Aman)
+      else if (stats.ipk >= 3.0 && stats.sanity >= 60) {
+        title = "LULUSAN STANDARD (NPC)";
+        desc = "kuliah-pulang-kuliah-pulang.<br>ipk aman, mental aman, ga ada drama.<br>hidup lu lempeng banget kayak jalan tol. membosankan tapi selamat.";
+      }
+
+      // 6. ENDING SIGMA (IPK Bagus, Biasa)
+      else if (stats.ipk >= 3.8) {
+        title = "LULUSAN SIGMA";
+        desc = "Lu keren bisa dapet ipk tinggi.<br>Meskipun idup lu sehari-hari belajar + turu doang, lu dingin banget.<br>Lu berhasil tunjukkin diri lu sebagai lulusan paling sigma.";
+      }
+
+      // 7. ENDING DEADLINER (IPK Mepet < 2.5)
+      else if (stats.ipk < 2.5) {
+        title = "SARJANA NASIB-NASIBAN";
+        desc = "ipk dua koma, yang penting toga.<br>lu lulus karena dosen udah males liat muka lu di kelas ngulang.<br>good luck cari kerja, saingan lu keras.";
+      }
+
+      // 8. ENDING DEFAULT
+      else {
+        title = "YANG PENTING LULUS";
+        desc = "congrats. lu berhasil melewati simulasi tanpa menjadi gila.<br>sekarang tutorial selesai. welcome to the real game: pengangguran.";
+      }
+
+      // RENDER ENDING
+      output.innerHTML = `
+        <h2 style="color: #f0f; border: 1px solid #f0f; padding: 10px;">${title}</h2>
+        <p style="font-size: 1.1em; margin-top: 20px;">${desc}</p>
+        <div style="margin-top: 30px; border-top: 1px dashed #fff; padding-top: 10px; color: #888;">
+            <p>FINAL STATS:</p>
+            <p>HARI: ${stats.day} | IPK: ${stats.ipk.toFixed(2)} | SALDO: Rp${stats.money.toLocaleString()}</p>
+        </div>
+        <button onclick="startGame()">reinkarnasi (main lagi)</button>
+      `;
+    }
+
+    function gameOver(reason) {
+      output.innerHTML = `
+        <h2 style="color:red">GAME OVER</h2>
+        <p>${reason}</p>
+        <p>Bertahan selama: ${stats.day} hari</p>
+        <p>IPK Terakhir: ${stats.ipk.toFixed(2)}</p>
+        <button onclick="startGame()">coba hidup lagi</button>
+      `;
+    }
+    // --- GAME LOGIC END ---
+
+  </script>
+
+</body>
+</html>
