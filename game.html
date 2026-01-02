@@ -137,7 +137,7 @@
       // Cek Game Over
       if (stats.sanity <= 0) return gameOver("masuk rsj. burnout permanen.");
       if (stats.ipk < 1.0) return gameOver("kena d.o. dipulangkan paksa.");
-      if (stats.money <= -50000) return gameOver("ditangkap warga karena ngutang warteg."); // Ada toleransi ngutang dikit
+      if (stats.money <= -10000) return gameOver("ditangkap warga karena ngutang warteg."); // Ada toleransi ngutang dikit
 
       // Warna Stats
       const ipkColor = stats.ipk > 3 ? "val-ok" : (stats.ipk > 2 ? "val-warn" : "val-crit");
@@ -174,28 +174,24 @@
 
       // Logika Aksi
       if (type === 'belajar') {
-        if (luck > 0.97) {
-          stats.ipk += getRandomDecimal(0.5, 1); 
-          stats.sanity -= getRandomInteger(5, 10);
-          msg = "lu seketika kerasukan enstein";
-        } else if (luck > 0.8) {
-          stats.ipk += getRandomDecimal(0.15, 0.25); 
-          stats.sanity -= getRandomInteger(10, 15);
+        if (luck > 0.9) {
+          stats.ipk += getRandomDecimal(0.08, 0.12); 
+          stats.sanity -= getRandomInteger(6, 10);
           msg = "dosen mood bagus. materi masuk otak.";
-        } else if (luck > 0.3) {
-          stats.ipk += getRandomDecimal(0.05, 0.15); 
-          stats.sanity -= getRandomInteger(15, 20);
+        } else if (luck > 0.4) {
+          stats.ipk += getRandomDecimal(0.04, 0.07); 
+          stats.sanity -= getRandomInteger(8, 12);
           msg = "dosen yapping gajelas. belajar sendiri.";
         } else {
-          stats.sanity -= getRandomInteger(20, 25);
-          stats.ipk -= getRandomDecimal(-0.01, 0.05); // Bingung malah turun
+          stats.sanity -= getRandomInteger(12, 18);
+          stats.ipk -= getRandomDecimal(-0.03, 0.01); // Bingung malah turun
           msg = "kuis dadakan. lu cuma bisa pasrah.";
         }
         stats.money -= dailyCost; // Tetep butuh makan
       } 
       else if (type === 'turu') {
-        stats.sanity += getRandomInteger(15, 20);
-        stats.ipk -= getRandomDecimal(0.02, 0.2); // Bolos sehari
+        stats.sanity += getRandomInteger(10, 15);
+        stats.ipk -= getRandomDecimal(0.01, 0.03); // Bolos sehari
         stats.money -= (dailyCost - 5000); // Hemat karena tidur doang
         msg = "seharian di kasur. dunia luar menakutkan.";
       } 
@@ -224,26 +220,26 @@
       else if (type === 'foya') {
         if (stats.money < 150000) {
           msg = "kartu ditolak. lu miskin.";
-          stats.sanity -= getRandomInteger(8, 12); // Malu
+          stats.sanity -= getRandomInteger(5, 8); // Malu
           stats.money -= dailyCost;
         } else {
           stats.money -= 150000;
-          stats.sanity += getRandomInteger(45, 60);
+          stats.sanity += getRandomInteger(25, 40);
           msg = "self healing. checkout shopee. dompet kosong.";
         }
-        stats.ipk -= getRandomDecimal(-0.01, 0.01);
+        stats.ipk -= getRandomDecimal(-0.01, 0.02);
       }
       else if (type === 'kerja') {
-        if (luck > 0.4) {
+        if (luck > 0.6) {
           stats.money += 75000; // Gaji harian
-          stats.sanity -= getRandomInteger(15, 20);
+          stats.sanity -= getRandomInteger(8, 12);
           msg = "jaga shift cafe. kaki pegel. dapet tips dikit.";
         } else {
-            stats.sanity -= getRandomInteger(20, 25);
-            stats.money += 10000; // Kena potong/sepi
+            stats.sanity -= getRandomInteger(12, 18);
+            stats.money += 20000; // Kena potong/sepi
             msg = "dimarahin bos. pelanggan rese. gaji dipotong.";
           }
-          stats.ipk -= getRandomDecimal(0.02, 0.03);
+          stats.ipk -= getRandomDecimal(0.01, 0.02);
         }
         
         // Time Progress
@@ -261,11 +257,11 @@
             stats.sanity += getRandomInteger(0, 5);
             transferMsg = "ortu lupa transfer. cuma dikirim pulsa.";
           } else if (allowanceLuck < 0.65) {
-            allowanceAmount = 500000 + Math.floor(Math.random() * 300000);
+            allowanceAmount = 500000 + Math.floor(Math.random() * 200000);
             stats.sanity += getRandomInteger(5, 15);
             transferMsg = "transferan standar masuk. cukup buat nafas.";
-          } else if (allowanceLuck < 0.95) {
-            allowanceAmount = 1000000 + Math.floor(Math.random() * 500000);
+          } else if (allowanceLuck < 0.98) {
+            allowanceAmount = 1000000 + Math.floor(Math.random() * 200000);
             stats.sanity += getRandomInteger(15, 25);
             transferMsg = "ortu lagi ada rejeki. transferan deres.";
           } else {
